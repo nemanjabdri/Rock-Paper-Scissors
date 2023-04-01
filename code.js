@@ -1,61 +1,23 @@
 function getComputerChoice() {
 
-    const choices = ['Rock', 'Paper', 'Scissors'];
+    const choices = [1, 2, 3]; //rock = 1, paper = 2 and scissors = 3
     const randomValue = choices[Math.floor(Math.random() * choices.length)];
 
     return randomValue;
 }
 
-function playRound(playerSelection, computerSelection){
+function playRound(playerSelection){
+    const computerSelection = getComputerChoice();
 
-    const playerChoice = playerSelection.toLowerCase();
-
-    if (playerChoice === 'rock' && computerSelection === 'Paper'){
-        console.log('You Lose! Paper beats Rock');
-        return 0;
-    }else if (playerChoice === 'rock' && computerSelection === 'Scissors'){
-        console.log('You Win! Rock beats Scissors');
-        return 1;
-    }else if (playerChoice === 'paper' && computerSelection === 'Rock'){
-        console.log('You Win! Paper beats Rock');
-        return 1;
-    }else if (playerChoice === 'paper' && computerSelection === 'Scissors'){
-        console.log('You Lose! Paper beats Rock');
-        return 0;
-    }else if (playerChoice === 'scissors' && computerSelection === 'Rock'){
-        console.log('You Lose! Paper beats Rock');
-        return 0;
-    }else if (playerChoice === 'scissors' && computerSelection === 'Paper'){
-        console.log('You Win! Scissors beats Paper');
-        return 1;
-    }else {
-        console.log('Drew! Keep going :)');
+    if ((playerSelection == 1 && computerSelection == 2) || (playerSelection == 2 && computerSelection == 3) || (playerSelection == 3 && computerSelection == 1)){
+        console.log('Player Lose!' + playerSelection + " " + computerSelection);
         return -1;
-    }
-}
-
-function game(){
-
-    const rounds = 5;
-    let playerScore = 0;
-    let computerScore = 0;
-    let playerSelection, computerSelection;
-
-    while(true){
-        playerSelection = //dodati
-        computerSelection = getComputerChoice();
-        let outcome = playRound(playerSelection, computerSelection);
-        if (outcome === 0){
-            computerScore += 1;
-        }else if(outcome === 1){
-            playerScore += 1;
-        }
-
-        if(computerScore == rounds){
-          return 'Computer Wins!';
-        }else if(playerScore == rounds){
-          return 'Player Wins!';
-        }
+    }else if ((playerSelection == 1 && computerSelection == 3) || (playerSelection == 2 && computerSelection == 1) || (playerSelection == 3 && computerSelection == 2)){
+        console.log('Player Win!' + playerSelection + " " + computerSelection);
+        return 1;
+    }else{
+      console.log('Tie!' + playerSelection + " " + computerSelection);
+        return 0;
     }
 }
 
@@ -74,20 +36,21 @@ imgPaper.setAttribute('src', 'paper.png');
 const imgScissors = document.createElement('img');
 imgScissors.setAttribute('src', 'scissor.png');
 
+
+//ading IMG atributes
 imgRock.style.height='220px';
-imgRock.style.border= '1px solid red';
 imgRock.style.transition = "all 0.5s ease";
 
 imgPaper.style.height='220px';
-imgPaper.style.border= '1px solid red';
 imgPaper.style.paddingLeft='60px';
 imgPaper.style.paddingRight='60px';
 imgPaper.style.transition = "all 0.5s ease";
 
 imgScissors.style.height='220px';
-imgScissors.style.border= '1px solid red';
 imgScissors.style.transition = "all 0.5s ease";
 
+
+// grouping IMGS together
 const mainScene = document.getElementById('main-scene');
 mainScene.appendChild(imgRock);
 mainScene.appendChild(imgPaper);
@@ -98,7 +61,7 @@ mainScene.style.justifyContent = 'center';
 mainScene.style.flexWrap = 'wrap'
 mainScene.style.marginTop = '50px';
 
-//Img animation
+//Img animations
 //Rock hover animation
 imgRock.addEventListener('mouseenter', () => {
   imgRock.style.height = "250px";
@@ -120,7 +83,6 @@ imgScissors.addEventListener('mouseenter', () => {
 imgScissors.addEventListener('mouseleave', () => {
   imgScissors.style.height = "220px";
 });
-
 
 
 
@@ -159,10 +121,9 @@ mainScore.style.color = "white";
 mainScore.style.fontSize= "50px";
 mainScore.style.marginTop= "10px";
 mainScore.style.textAlign ='center';
-mainScore.style.border= '1px solid red';
 
 //CurrentScore function
-const currentScoreText = document.createTextNode("0 - 0"); //initial score
+let currentScoreText = document.createTextNode("0  -  0"); //initial score
 
 const currentScore = document.getElementById("currentScore");
 currentScore.appendChild(currentScoreText);
@@ -173,11 +134,103 @@ currentScore.style.textAlign ='center';
 currentScore.style.transition ='opacity 0.5s';
 currentScore.style.fontSize ='70px';
 
-imgRock.addEventListener('click', () =>{
+//Score message function
+const scoreMsg = document.getElementById("scoreMessage");
+let scoreMessage = document.createTextNode("poruka");
+scoreMsg.appendChild(scoreMessage);
+scoreMsg.style.color = "white";
+scoreMsg.style.fontSize= "40px";
+scoreMsg.style.marginTop= "4px";
+scoreMsg.style.textAlign ='center';
+scoreMsg.style.transition ='opacity 0.5s';
+
+const scoreMsgFunc = (outcome) =>{
+  if(outcome == -1){
+    scoreMessage.textContent = 'Computer got this round!';
+  }else if(outcome == 1){
+    scoreMessage.textContent = 'User got this round!';
+  }else if(outcome == 0){
+    scoreMessage.textContent = 'Tie!';
+  }else{
+    console.log('wrong input');
+  }
+};
+
+
+// CLICK Event listeners
+imgRock.addEventListener('click', () =>{ //rock = 1
+  game(1);
+
   currentScore.style.opacity = "0";
   
   setTimeout(() => {
-    currentScore.textContent = "1 - 0";
+    currentScore.textContent = `${playerScore}  -  ${computerScore}`;
     currentScore.style.opacity = "1";
   }, 200);
 });
+
+imgPaper.addEventListener('click', () =>{ //paper = 1
+  game(2);
+
+  currentScore.style.opacity = "0";
+  
+  setTimeout(() => {
+    currentScore.textContent = `${playerScore}  -  ${computerScore}`;
+    currentScore.style.opacity = "1";
+  }, 200);
+});
+
+imgScissors.addEventListener('click', () =>{ //scissors = 1
+  game(3);
+
+  currentScore.style.opacity = "0";
+  
+  setTimeout(() => {
+    currentScore.textContent = `${playerScore}  -  ${computerScore}`;
+    currentScore.style.opacity = "1";
+  }, 200);
+});
+
+//GAME START
+const rounds = 5; //first to 5 wins
+let playerScore = 0;
+let computerScore = 0;
+
+function game(playerChoice){
+
+      const outcome = playRound(playerChoice);
+      if (outcome == -1){ //computer wins
+        computerScore += 1;
+        scoreMsgFunc(outcome);
+      }else if(outcome == 1){ //player wins
+        playerScore += 1;
+        scoreMsgFunc(outcome);
+      }else if(outcome == 0){ //tie
+        scoreMsgFunc(outcome);
+      }
+
+      if(computerScore == rounds){
+        finalMessage(0);
+      }else if(playerScore == rounds){
+        finalMessage(1);
+      }
+}
+
+  // Game winner message
+  function finalMessage(winner) {
+    if(winner == 1){
+      scoreMessage.textContent = 'User wins the game!';
+    }else if(winner == 0){
+      scoreMessage.textContent = 'Computer wins the game!';
+    }
+
+    computerScore = 0; //reset score
+    playerScore = 0;
+
+    currentScore.style.opacity = "0";
+  
+    setTimeout(() => {
+      currentScore.textContent = `${playerScore}  -  ${computerScore}`;
+      currentScore.style.opacity = "1";
+    }, 5000);
+  }
